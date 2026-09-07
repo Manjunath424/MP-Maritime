@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maritime Atelier | Luxury Ship Models</title>
+  <style>
+    :root{
+      --bg:#05070c;
+      --bg2:#0a1018;
+      --panel:#0d1420;
+      --panel2:#111a28;
+      --line:rgba(255,255,255,.08);
+      --text:#f4efe6;
+      --muted:#b6ac9a;
+      --gold:#d7b46a;
+      --gold2:#f0d7a2;
+      --blue:#7aa7d9;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --radius:22px;
+      --max:1280px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top, rgba(215,180,106,.14), transparent 28%),
+        linear-gradient(180deg,var(--bg) 0%, var(--bg2) 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--max);margin:0 auto;padding:0 24px}
+    .topbar{
+      position:sticky;top:0;z-index:100;
+      backdrop-filter:blur(18px);
+      background:rgba(5,7,12,.78);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:18px 0;
+    }
+    .brand{display:flex;align-items:center;gap:14px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+    .brand-mark{
+      width:38px;height:38px;border-radius:14px;
+      background:linear-gradient(135deg,var(--gold),#8e6d2b);
+      box-shadow:0 10px 30px rgba(215,180,106,.25);
+    }
+    .navlinks{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .navlinks button,.btn,.chip, input, select, textarea{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      border-radius:999px;
+    }
+    .navlinks button,.btn,.chip{
+      padding:11px 16px;
+      cursor:pointer;
+      transition:.22s ease;
+    }
+    .navlinks button:hover,.btn:hover,.chip:hover{transform:translateY(-1px);border-color:rgba(215,180,106,.42)}
+    .btn.primary{background:linear-gradient(135deg,var(--gold),#9c7d3d);border-color:transparent;color:#111}
+    .btn.dark{background:rgba(255,255,255,.04)}
+    .btn.block{width:100%;border-radius:16px}
+    .view{display:none}
+    .view.active{display:block}
+
+    .hero{
+      padding:44px 0 24px;
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:24px;
+      align-items:stretch;
+      min-height:calc(100vh - 86px);
+    }
+    .hero-main,.hero-side,.card,.panel{
+      background:linear-gradient(180deg,rgba(17,26,40,.94),rgba(10,16,24,.94));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+    }
+    .hero-main{padding:44px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+    .hero-main::before{
+      content:"";
+      position:absolute;inset:auto -10% -10% auto;
+      width:320px;height:320px;border-radius:50%;
+      background:radial-gradient(circle, rgba(215,180,106,.18), transparent 65%);
+      filter:blur(6px);
+    }
+    .eyebrow{
+      display:inline-flex;gap:10px;align-items:center;
+      letter-spacing:.22em;text-transform:uppercase;
+      color:var(--gold2);font-size:.78rem
+    }
+    .eyebrow::before{
+      content:"";width:34px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)
+    }
+    h1{margin:18px 0 16px;font-size:clamp(2.6rem,5vw,5.5rem);line-height:.95;max-width:11ch}
+    .lead{max-width:62ch;color:var(--muted);font-size:1.06rem;line-height:1.8}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+    .stat{padding:16px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+    .stat strong{display:block;font-size:1.1rem;margin-bottom:4px}
+    .stat span{color:var(--muted);font-size:.95rem}
+
+    .hero-side{padding:18px;display:grid;gap:14px;align-content:start}
+    .hero-art{
+      min-height:360px;border-radius:20px;position:relative;overflow:hidden;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(122,167,217,.32), transparent 24%),
+        linear-gradient(135deg,#0b1320,#17243b);
+      border:1px solid var(--line);
+    }
+    .hero-art::before{
+      content:"";position:absolute;inset:34px;border-radius:20px;
+      border:1px dashed rgba(255,255,255,.16)
+    }
+    .hero-art::after{
+      content:"Premium model showcase";
+      position:absolute;left:28px;bottom:24px;
+      letter-spacing:.2em;text-transform:uppercase;
+      color:rgba(244,239,230,.78);font-size:.78rem
+    }
+
+    .section{padding:20px 0 8px}
+    .section h2{margin:0 0 14px;font-size:1.7rem;letter-spacing:.02em}
+    .subtle{color:var(--muted);margin:0 0 20px;max-width:70ch;line-height:1.8}
+
+    .toolbar{
+      display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px
+    }
+    .toolbar input,.toolbar select,.field input,.field textarea,.field select{
+      padding:13px 16px;
+      min-width:220px;
+      outline:none;
+      border-radius:16px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:18px;
+    }
+    .product{
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:100%;
+    }
+    .product .img{
+      height:220px;
+      background:
+        linear-gradient(135deg, rgba(215,180,106,.16), rgba(122,167,217,.16)),
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.16), transparent 30%),
+        linear-gradient(135deg,#102033,#182a42);
+      position:relative;
+    }
+    .product .img::after{
+      content:"";
+      position:absolute;inset:18px;
+      border-radius:18px;border:1px solid rgba(255,255,255,.12)
+    }
+    .product .body{padding:18px;display:grid;gap:10px}
+    .badge{
+      display:inline-flex;width:max-content;align-items:center;gap:8px;
+      padding:7px 12px;border-radius:999px;
+      background:rgba(215,180,106,.12);
+      border:1px solid rgba(215,180,106,.22);
+      color:var(--gold2);font-size:.82rem;letter-spacing:.04em
+    }
+    .meta{display:flex;flex-wrap:wrap;gap:10px}
+    .meta span{color:var(--muted);font-size:.92rem}
+    .price{font-size:1.2rem;font-weight:700;color:var(--gold2)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+    .layout-2{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}
+    .panel{padding:22px}
+    .divider{height:1px;background:var(--line);margin:14px 0}
+    .muted{color:var(--muted)}
+    .list{display:grid;gap:12px}
+    .item{
+      display:flex;justify-content:space-between;gap:14px;align-items:flex-start;
+      padding:16px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid var(--line)
+    }
+    .item h4{margin:0 0 6px;font-size:1rem}
+    .item small{color:var(--muted)}
+    .totals .line{display:flex;justify-content:space-between;gap:12px;padding:7px 0}
+    .auth-wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .field{display:grid;gap:8px;margin-bottom:12px}
+    .field label{color:var(--muted);font-size:.92rem}
+    .field input,.field textarea,.field select{width:100%}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{padding:12px;border-bottom:1px solid var(--line);text-align:left}
+    .footer{padding:26px 0 44px;text-align:center;color:var(--muted)}
+    .note{
+      margin-top:18px;
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(215,180,106,.09);
+      border:1px solid rgba(215,180,106,.16);
+      color:#efe1c1;
+    }
+
+    /* 3D Viewer */
+    .viewer-wrap{
+      margin-top:18px;
+      padding:18px;
+      border-radius:20px;
+      background:rgba(255,255,255,.03);
+      border:1px solid var(--line);
+    }
+    .viewer-head{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;
+      margin-bottom:12px
+    }
+    model-viewer{
+      width:100%;
+      height:520px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(215,180,106,.12), transparent 22%),
+        linear-gradient(135deg,#101a29,#1a2b45);
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    @media (max-width: 980px){
+      .hero,.layout-2,.auth-wrap{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr}
+      h1{max-width:none}
+      .toolbar input,.toolbar select,.field input,.field textarea,.field select{min-width:0;flex:1}
+      model-viewer{height:420px}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div>Maritime Atelier</div>
+      </div>
+      <div class="navlinks">
+        <button onclick="showView('home')">Home</button>
+        <button onclick="showView('shop')">Collection</button>
+        <button onclick="showView('cart')">Cart <span id="cartCount">0</span></button>
+        <button onclick="showView('auth')">Login</button>
+        <button onclick="showView('account')">Account</button>
+        <button onclick="showView('admin')">Admin</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <section id="home" class="view active">
+      <div class="hero">
+        <div class="hero-main">
+          <div>
+            <div class="eyebrow">Luxury ship model boutique</div>
+            <h1>Elegant ship models for serious collectors.</h1>
+            <p class="lead">
+              Showcase wooden kits, display pieces, RC ships, die-cast models, and accessories with a refined luxury storefront.
+              Every product page highlights scale, material, brand, dimensions, parts count, and a 3D preview.
+            </p>
+            <div class="hero-actions">
+              <button class="btn primary" onclick="showView('shop')">Explore collection</button>
+              <button class="btn dark" onclick="showView('product')">View featured model</button>
+            </div>
+            <div class="stats">
+              <div class="stat"><strong>Premium presentation</strong><span>Dark luxury design with gold accents.</span></div>
+              <div class="stat"><strong>Detailed product data</strong><span>Scale, brand, material, and specs.</span></div>
+              <div class="stat"><strong>3D ship viewer</strong><span>Interactive model preview on the product page.</span></div>
+            </div>
+          </div>
+          <div class="note">This is a complete front-end file. Connect the buttons and forms to your Node.js API later.</div>
+        </div>
+
+        <div class="hero-side">
+          <div class="hero-art"></div>
+          <div class="card panel">
+            <div class="badge">Featured categories</div>
+            <p class="muted">Wooden kits, display models, RC ships, die-cast collectibles, and ship-building accessories.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="shop" class="view">
+      <div class="section">
+        <h2>Collection</h2>
+        <p class="subtle">The catalog is arranged for luxury browsing, with strong visuals and quick access to model details. Scale browsing is especially useful for ship model shoppers. [web:23][web:41]</p>
+        <div class="toolbar">
+          <input id="searchInput" placeholder="Search ship models..." oninput="renderProducts()">
+          <select id="categoryFilter" onchange="renderProducts()">
+            <option value="">All categories</option>
+            <option>Wooden Kits</option>
+            <option>Display Models</option>
+            <option>RC Ships</option>
+            <option>Die-Cast</option>
+            <option>Accessories</option>
+          </select>
+          <select id="sortFilter" onchange="renderProducts()">
+            <option value="featured">Featured</option>
+            <option value="priceLow">Price: Low to High</option>
+            <option value="priceHigh">Price: High to Low</option>
+          </select>
+        </div>
+        <div id="productGrid" class="grid"></div>
+      </div>
+    </section>
+
+    <section id="product" class="view">
+      <div class="layout-2">
+        <div class="card panel">
+          <div class="badge" id="pCategory">Category</div>
+          <h2 id="pName" style="margin:14px 0 8px;">Product name</h2>
+          <div class="muted" id="pBrand">Brand</div>
+          <div class="divider"></div>
+
+          <div class="row">
+            <span class="badge" id="pScale">Scale</span>
+            <span class="badge" id="pMaterial">Material</span>
+            <span class="badge" id="pDifficulty">Difficulty</span>
+          </div>
+
+          <div class="divider"></div>
+          <p id="pDesc" class="muted"></p>
+
+          <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+            <div class="stat"><strong>Dimensions</strong><span id="pDimensions" class="muted"></span></div>
+            <div class="stat"><strong>Parts</strong><span id="pParts" class="muted"></span></div>
+            <div class="stat"><strong>SKU</strong><span id="pSku" class="muted"></span></div>
+            <div class="stat"><strong>Stock</strong><span id="pStock" class="muted"></span></div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="row">
+            <div class="price" id="pPrice">$0.00</div>
+            <button class="btn primary" onclick="addCurrentToCart()">Add to cart</button>
+          </div>
+
+          <div class="viewer-wrap">
+            <div class="viewer-head">
+              <strong>Interactive 3D View</strong>
+              <span class="badge">3D Preview</span>
+            </div>
+
+            <model-viewer
+              src="/models/ship.glb"
+              poster="/images/ship-poster.jpg"
+              alt="Interactive 3D ship model"
+              camera-controls
+              auto-rotate
+              rotation-per-second="15deg"
+              shadow-intensity="1"
+              exposure="1.1"
+              ar>
+            </model-viewer>
+
+            <p class="muted" style="margin:12px 0 0;">Drag to rotate, pinch to zoom, and inspect the model from every angle.</p>
+          </div>
+        </div>
+
+        <div class="card panel">
+          <h3>Gallery</h3>
+          <div style="height:340px;border-radius:20px;background:
+              radial-gradient(circle at 28% 30%, rgba(215,180,106,.22), transparent 24%),
+              radial-gradient(circle at 70% 40%, rgba(122,167,217,.24), transparent 18%),
+              linear-gradient(135deg,#101a29,#1a2b45);
+              border:1px solid var(--line)">
+          </div>
+          <p class="muted" style="margin-top:12px;">Add 3 to 5 images for each model: hero angle, hull detail, deck detail, scale reference, and packaging. [web:41]</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="cart" class="view">
+      <div class="layout-2 section">
+        <div class="card panel">
+          <h2>Your cart</h2>
+          <div id="cartList" class="list"></div>
+        </div>
+        <div class="card panel">
+          <h3>Order summary</h3>
+          <div class="totals">
+            <div class="line"><span>Subtotal</span><span id="subTotal">$0.00</span></div>
+            <div class="line"><span>Shipping</span><span id="shippingTotal">$10.00</span></div>
+            <div class="line"><span>Tax</span><span id="taxTotal">$0.00</span></div>
+            <div class="divider"></div>
+            <div class="line"><strong>Total</strong><strong id="grandTotal">$0.00</strong></div>
+          </div>
+          <div class="divider"></div>
+          <button class="btn primary block" onclick="showView('checkout')">Proceed to checkout</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="checkout" class="view">
+      <div class="card panel">
+        <h2>Checkout</h2>
+        <p class="muted">Connect this section to Stripe test mode in your Node.js backend. Stripe provides test card numbers for development, including 4242 4242 4242 4242. [web:11]</p>
+        <div class="auth-wrap">
+          <div>
+            <h3>Shipping address</h3>
+            <div class="field"><label>Name</label><input id="shipName" placeholder="Full name"></div>
+            <div class="field"><label>Address</label><input id="shipLine1" placeholder="Street address"></div>
+            <div class="field"><label>City</label><input id="shipCity" placeholder="City"></div>
+            <div class="field"><label>State</label><input id="shipState" placeholder="State"></div>
+            <div class="field"><label>Postal code</label><input id="shipPostal" placeholder="Postal code"></div>
+            <div class="field"><label>Country</label><input id="shipCountry" value="India"></div>
+          </div>
+          <div>
+            <h3>Payment details</h3>
+            <div class="field"><label>Card number</label><input id="cardNumber" placeholder="4242 4242 4242 4242"></div>
+            <div class="field"><label>Expiry</label><input id="cardExpiry" placeholder="12/30"></div>
+            <div class="field"><label>CVC</label><input id="cardCvc" placeholder="123"></div>
+            <button class="btn primary" onclick="placeOrder()">Pay now</button>
+            <p class="muted" id="checkoutMsg"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="auth" class="view">
+      <div class="auth-wrap">
+        <div class="card panel">
+          <h2>Create account</h2>
+          <div class="field"><label>Name</label><input id="suName"></div>
+          <div class="field"><label>Email</label><input id="suEmail" type="email"></div>
+          <div class="field"><label>Password</label><input id="suPass" type="password"></div>
+          <button class="btn primary" onclick="signup()">Sign up</button>
+        </div>
+        <div class="card panel">
+          <h2>Login</h2>
+          <div class="field"><label>Email</label><input id="liEmail" type="email"></div>
+          <div class="field"><label>Password</label><input id="liPass" type="password"></div>
+          <button class="btn primary" onclick="login()">Login</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="account" class="view">
+      <div class="card panel">
+        <h2>Account</h2>
+        <p class="muted" id="accountInfo">Not signed in.</p>
+        <div class="divider"></div>
+        <h3>Order history</h3>
+        <div id="ordersList" class="list"></div>
+      </div>
+    </section>
+
+    <section id="admin" class="view">
+      <div class="layout-2">
+        <div class="card panel">
+          <h2>Admin product management</h2>
+          <div class="field"><label>Product name</label><input id="adName"></div>
+          <div class="field"><label>Brand</label><input id="adBrand"></div>
+          <div class="field"><label>Category</label>
+            <select id="adCategory">
+              <option>Wooden Kits</option>
+              <option>Display Models</option>
+              <option>RC Ships</option>
+              <option>Die-Cast</option>
+              <option>Accessories</option>
+            </select>
+          </div>
+          <div class="field"><label>Scale</label><input id="adScale" placeholder="1:98"></div>
+          <div class="field"><label>Material</label><input id="adMaterial" placeholder="Wood + Brass"></div>
+          <div class="field"><label>Difficulty</label>
+            <select id="adDifficulty">
+              <option>Beginner</option>
+              <option>Intermediate</option>
+              <option>Advanced</option>
+            </select>
+          </div>
+          <div class="field"><label>Dimensions</label><input id="adDimensions" placeholder="47 in × 16 in × 36 in"></div>
+          <div class="field"><label>Parts count</label><input id="adParts" placeholder="Approx. 9000"></div>
+          <div class="field"><label>SKU</label><input id="adSku"></div>
+          <div class="field"><label>Price</label><input id="adPrice" type="number"></div>
+          <div class="field"><label>Stock</label><input id="adStock" type="number"></div>
+          <div class="field"><label>Description</label><textarea id="adDesc" rows="5"></textarea></div>
+          <button class="btn primary block" onclick="addAdminProduct()">Save product</button>
+        </div>
+        <div class="card panel">
+          <h3>Products</h3>
+          <table class="table">
+            <thead>
+              <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr>
+            </thead>
+            <tbody id="adminTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">Maritime Atelier — luxury ship model storefront.</footer>
+
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <script>
+    const products = [
+      { id: 1, name: 'HMS Victory Wooden Kit', category: 'Wooden Kits', brand: 'OcCre', scale: '1:98', material: 'Wood + Brass', difficulty: 'Advanced', dimensions: '47 in × 16 in × 36 in', parts: 'Approx. 9000', sku: 'HV-098-WOOD', price: 129.99, stock: 12, desc: 'A museum-grade wooden ship model kit with precision laser-cut parts, fine rigging, and a display-quality finish.', meta: '1:98 • Wood • OcCre' },
+      { id: 2, name: 'Titanic Display Model', category: 'Display Models', brand: 'Premium Line', scale: '1:400', material: 'Resin', difficulty: 'Intermediate', dimensions: '32 in × 4 in × 9 in', parts: 'Approx. 240', sku: 'TT-400-DS', price: 89.50, stock: 8, desc: 'A refined display model with elegant proportions, a clean painted finish, and a premium stand.', meta: '1:400 • Resin • Premium' },
+      { id: 3, name: 'RC Patrol Boat', category: 'RC Ships', brand: 'Aqua Speed', scale: '1:36', material: 'Plastic + Electronics', difficulty: 'Beginner', dimensions: '24 in × 7 in × 10 in', parts: 'Kit with controller', sku: 'RC-PB-036', price: 159.00, stock: 5, desc: 'An easy-to-use remote-controlled ship model for hobbyists who enjoy motion, speed, and hands-on fun.', meta: 'RC • Plastic • Beginner' },
+      { id: 4, name: 'Cargo Ship Die-Cast', category: 'Die-Cast', brand: 'Collector Series', scale: '1:700', material: 'Metal', difficulty: 'Beginner', dimensions: '8 in × 1.5 in × 2 in', parts: '1 piece', sku: 'CD-700-MET', price: 44.99, stock: 20, desc: 'A compact collectible with realistic hull detailing and a premium die-cast finish.', meta: '1:700 • Metal • Collector' },
+      { id: 5, name: 'Rigging Accessory Pack', category: 'Accessories', brand: 'Hobby Tools', scale: 'Varies', material: 'Mixed', difficulty: 'Beginner', dimensions: 'Accessory set', parts: 'Multiple items', sku: 'ACC-RIG-001', price: 19.99, stock: 30, desc: 'Threads, blocks, and detailing parts to elevate ship model realism and presentation.', meta: 'Tools • Parts • Hobby' }
+    ];
+
+    const state = {
+      currentProduct: products[0],
+      cart: JSON.parse(localStorage.getItem('cart') || '[]'),
+      user: JSON.parse(localStorage.getItem('user') || 'null'),
+      orders: JSON.parse(localStorage.getItem('orders') || '[]')
+    };
+
+    function money(n){ return '$' + Number(n).toFixed(2); }
+
+    function saveState(){
+      localStorage.setItem('cart', JSON.stringify(state.cart));
+      localStorage.setItem('user', JSON.stringify(state.user));
+      localStorage.setItem('orders', JSON.stringify(state.orders));
+      updateCartCount();
+    }
+
+    function updateCartCount(){
+      document.getElementById('cartCount').textContent = state.cart.reduce((a,b)=>a+b.qty,0);
+    }
+
+    function showView(id){
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if(id === 'shop') renderProducts();
+      if(id === 'cart') renderCart();
+      if(id === 'account') renderAccount();
+      if(id === 'admin') renderAdmin();
+      if(id === 'product') renderProduct();
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function renderProducts(){
+      const q = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+      const cat = document.getElementById('categoryFilter')?.value || '';
+      const sort = document.getElementById('sortFilter')?.value || 'featured';
+      let list = products.filter(p =>
+        (!q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)) &&
+        (!cat || p.category === cat)
+      );
+      if(sort === 'priceLow') list.sort((a,b)=>a.price-b.price);
+      if(sort === 'priceHigh') list.sort((a,b)=>b.price-a.price);
+      document.getElementById('productGrid').innerHTML = list.map(p => `
+        <div class="card product">
+          <div class="img"></div>
+          <div class="body">
+            <span class="badge">${p.category}</span>
+            <h3 style="margin:0">${p.name}</h3>
+            <div class="meta"><span>${p.brand}</span><span>•</span><span>${p.scale}</span></div>
+            <div class="row">
+              <div class="price">${money(p.price)}</div>
+              <span class="muted">Stock: ${p.stock}</span>
+            </div>
+            <div class="row">
+              <button class="btn primary" onclick="openProduct(${p.id})">View</button>
+              <button class="btn dark" onclick="addToCart(${p.id})">Add to cart</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openProduct(id){
+      state.currentProduct = products.find(p=>p.id===id);
+      showView('product');
+    }
+
+    function renderProduct(){
+      const p = state.currentProduct;
+      document.getElementById('pCategory').textContent = p.category;
+      document.getElementById('pName').textContent = p.name;
+      document.getElementById('pBrand').textContent = p.brand;
+      document.getElementById('pScale').textContent = p.scale;
+      document.getElementById('pMaterial').textContent = p.material;
+      document.getElementById('pDifficulty').textContent = p.difficulty;
+      document.getElementById('pDesc').textContent = p.desc;
+      document.getElementById('pDimensions').textContent = p.dimensions;
+      document.getElementById('pParts').textContent = p.parts;
+      document.getElementById('pSku').textContent = p.sku;
+      document.getElementById('pStock').textContent = p.stock > 0 ? `In stock: ${p.stock}` : 'Out of stock';
+      document.getElementById('pPrice').textContent = money(p.price);
+    }
+
+    function addToCart(id){
+      const p = products.find(x=>x.id===id);
+      const existing = state.cart.find(i=>i.id===id);
+      if(existing) existing.qty += 1;
+      else state.cart.push({ id: p.id, name: p.name, price: p.price, qty: 1 });
+      saveState();
+      alert('Added to cart');
+    }
+
+    function addCurrentToCart(){ addToCart(state.currentProduct.id); }
+
+    function renderCart(){
+      const list = document.getElementById('cartList');
+      if(!state.cart.length){
+        list.innerHTML = '<p class="muted">Your cart is empty.</p>';
+      } else {
+        list.innerHTML = state.cart.map(item => `
+          <div class="item">
+            <div>
+              <h4>${item.name}</h4>
+              <small>${money(item.price)} × ${item.qty}</small>
+            </div>
+            <div class="row">
+              <strong>${money(item.price * item.qty)}</strong>
+              <button class="btn dark" onclick="removeFromCart(${item.id})">Remove</button>
+            </div>
+          </div>
+        `).join('');
+      }
+      const sub = state.cart.reduce((a,b)=>a+b.price*b.qty,0);
+      const ship = state.cart.length ? 10 : 0;
+      const tax = 0;
+      document.getElementById('subTotal').textContent = money(sub);
+      document.getElementById('shippingTotal').textContent = money(ship);
+      document.getElementById('taxTotal').textContent = money(tax);
+      document.getElementById('grandTotal').textContent = money(sub + ship + tax);
+    }
+
+    function removeFromCart(id){
+      state.cart = state.cart.filter(i=>i.id!==id);
+      saveState();
+      renderCart();
+    }
+
+    function signup(){
+      state.user = { name: document.getElementById('suName').value, email: document.getElementById('suEmail').value };
+      saveState();
+      showView('account');
+    }
+
+    function login(){
+      state.user = { name: 'Demo User', email: document.getElementById('liEmail').value };
+      saveState();
+      showView('account');
+    }
+
+    function renderAccount(){
+      document.getElementById('accountInfo').textContent = state.user
+        ? `Signed in as ${state.user.name || 'User'} (${state.user.email || ''})`
+        : 'Not signed in.';
+      const list = document.getElementById('ordersList');
+      if(!state.orders.length){
+        list.innerHTML = '<p class="muted">No orders yet.</p>';
+      } else {
+        list.innerHTML = state.orders.map(o => `
+          <div class="item">
+            <div>
+              <h4>Order #${o.id}</h4>
+              <small>${o.items.length} item(s) • ${o.status}</small>
+            </div>
+            <strong>${money(o.total)}</strong>
+          </div>
+        `).join('');
+      }
+    }
+
+    function placeOrder(){
+      const msg = document.getElementById('checkoutMsg');
+      if(!state.cart.length){ msg.textContent = 'Cart is empty.'; return; }
+      const sub = state.cart.reduce((a,b)=>a+b.price*b.qty,0);
+      const total = sub + 10;
+      state.orders.unshift({ id: Date.now(), items:[...state.cart], total, status:'paid' });
+      state.cart = [];
+      saveState();
+      msg.textContent = 'Order placed successfully.';
+      showView('account');
+    }
+
+    function renderAdmin(){
+      document.getElementById('adminTable').innerHTML = products.map(p => `
+        <tr>
+          <td>${p.name}</td>
+          <td>${p.category}</td>
+          <td>${money(p.price)}</td>
+          <td>${p.stock}</td>
+        </tr>
+      `).join('');
+    }
+
+    function addAdminProduct(){
+      const name = document.getElementById('adName').value.trim();
+      const brand = document.getElementById('adBrand').value.trim();
+      const category = document.getElementById('adCategory').value;
+      const scale = document.getElementById('adScale').value.trim();
+      const material = document.getElementById('adMaterial').value.trim();
+      const difficulty = document.getElementById('adDifficulty').value;
+      const dimensions = document.getElementById('adDimensions').value.trim();
+      const parts = document.getElementById('adParts').value.trim();
+      const sku = document.getElementById('adSku').value.trim();
+      const price = Number(document.getElementById('adPrice').value || 0);
+      const stock = Number(document.getElementById('adStock').value || 0);
+      const desc = document.getElementById('adDesc').value.trim();
+      if(!name || !desc) return alert('Please complete product name and description.');
+      products.unshift({
+        id: Date.now(), name, brand, category, scale, material, difficulty, dimensions, parts, sku, price, stock, desc,
+        meta: `${scale} • ${material} • ${brand}`
+      });
+      renderAdmin();
+      renderProducts();
+      alert('Product added locally.');
+    }
+
+    updateCartCount();
+    renderProducts();
+  </script>
+</body>
+</html>
